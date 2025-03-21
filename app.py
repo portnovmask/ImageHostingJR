@@ -85,8 +85,15 @@ class ImageHostingHttpRequestHandler(BaseHTTPRequestHandler):
             for header, value in headers.items():
                 self.send_header(header, value)
         self.end_headers()
+        print(f"serving path: {STATIC_PATH + file_path}...\nheaders: {headers}\ncode:{code}")
         with open(STATIC_PATH + file_path, 'rb') as file:
             self.wfile.write(file.read())
+
+    # def do_HEAD(self):
+    #     # Обрабатываем HEAD запросы (только заголовки)
+    #     self.send_response(200)
+    #     self.send_header('Content-type', 'text/html')
+    #     self.end_headers()
 
     def do_GET(self):
         logger.info(f'GET {self.path}')

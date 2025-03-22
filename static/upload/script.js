@@ -39,18 +39,70 @@ function handleFiles(files) {
 
   if (!['image/jpeg','image/png','image/gif', 'image/jpg'].includes(file.type)) {
     // Ошибка
-    dropArea.classList.add('error');
+    dropArea.innerHTML = '';
+    dropArea.innerHTML = `<div class="upload-area__icon">
+                <img src="failed.png" alt="Upload Icon" width="70" height="50"/>
+            </div>
+            <p>Unsupported file type or size!</p>
+            <p class="upload-area__subtext">Your file has wrong extension<br>or too big to upload</p>`;
     dropArea.classList.remove('success');
+      dropArea.classList.add('error');
+    setTimeout(() => {
+      dropArea.innerHTML = '';
+      dropArea.innerHTML = `<div class="upload-area__icon">
+                <img src="upload.png" alt="Upload Icon" width="70" height="50"/>
+            </div>
+            <p>Select a file or drag and drop here</p>
+            <p class="upload-area__subtext">Only support .jpg, .png and
+                .gif.<br>Maximum file size is 5MB</p>`;
+      dropArea.classList.remove('error');
+    }, 4000)
     return;
   }
 
   if (file.size > 5 * 1024 * 1024) {
-    dropArea.classList.add('error');
+
+    dropArea.innerHTML = '';
+    dropArea.innerHTML = `<div class="upload-area__icon">
+                <img src="failed.png" alt="Upload Icon" width="70" height="50"/>
+            </div>
+            <p>Unsupported file type or size!</p>
+            <p class="upload-area__subtext">Only 5MB of .jpg, .png and
+                .gif.<br>Please try appropriate file</p>`;
     dropArea.classList.remove('success');
+      dropArea.classList.add('error');
+    setTimeout(() => {
+      dropArea.innerHTML = '';
+      dropArea.innerHTML = `<div class="upload-area__icon">
+                <img src="upload.png" alt="Upload Icon" width="70" height="50"/>
+            </div>
+            <p>Select a file or drag and drop here</p>
+            <p class="upload-area__subtext">Only support .jpg, .png and
+                .gif.<br>Maximum file size is 5MB</p>`;
+      dropArea.classList.remove('error');
+    }, 4000)
+
     return;
   }
 
   dropArea.classList.remove('error');
+  dropArea.innerHTML = '';
+    dropArea.innerHTML = `<div class="upload-area__icon">
+                <img src="success.png" alt="Upload Icon" width="70" height="50"/>
+            </div>
+            <p>File downloaded successfully!</p>
+            <p class="upload-area__subtext">Your image added to gallery<br>Copy the link below to share</p>`;
+    dropArea.classList.add('success');
+    setTimeout(() => {
+      dropArea.innerHTML = '';
+      dropArea.innerHTML = `<div class="upload-area__icon">
+                <img src="upload.png" alt="Upload Icon" width="70" height="50"/>
+            </div>
+            <p>Select a file or drag and drop here</p>
+            <p class="upload-area__subtext">Only support .jpg, .png and
+                .gif.<br>Maximum file size is 5MB</p>`;
+      dropArea.classList.remove('success');
+    }, 3000)
 
 }
 
@@ -88,6 +140,7 @@ function uploadFile() {
     document.getElementById('uploadUrl').value = response.headers.get('Location');
 
     copyButton.disabled = false;
+
     dropArea.classList.add('success');
     setTimeout(() => {
       dropArea.classList.remove('success');

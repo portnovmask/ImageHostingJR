@@ -3,6 +3,7 @@ const fileInput = document.getElementById('fileInput');
 const browseButton = document.getElementById('browseButton');
 const uploadUrlInput = document.getElementById('uploadUrl');
 const copyButton = document.getElementById('copyButton');
+const openButton = document.getElementById('openButton');
 
 browseButton.addEventListener('click', () => {
   fileInput.click();
@@ -110,12 +111,12 @@ function handleFiles(files) {
 copyButton.addEventListener('click', () => {
   navigator.clipboard.writeText(uploadUrlInput.value)
     .then(() => {
-      copyButton.textContent = 'Copied!';
-      copyButton.style.backgroundColor = '#7B7B7B';
+      copyButton.classList.add('copied');
+      uploadUrlInput.classList.add('url-copied')
       setTimeout(() => {
-        copyButton.innerHTML = '<img src="copy.png" alt="Copy" width="20" height="20">';
-        copyButton.style.backgroundColor = '#007BFF';
-      }, 1000);
+        copyButton.classList.remove('copied');
+        uploadUrlInput.classList.remove('url-copied')
+      }, 1500);
     })
     .catch((err) => {
       console.error('Failed to copy:', err);
@@ -137,6 +138,7 @@ function uploadFile() {
   })
   .then(response => {
     const responseOk = response.status;
+    const responseLink = response.headers.get('Location');
     if (responseOk > 304) {
 
     dropArea.innerHTML = '';
@@ -161,9 +163,12 @@ function uploadFile() {
 
     return;
     }
-    document.getElementById('uploadUrl').value = response.headers.get('Location');
+
+    document.getElementById('uploadUrl').value = responseLink;
 
     copyButton.disabled = false;
+    openButton.disabled = false;
+    openButton.href = responseLink;
 
     dropArea.classList.add('success');
     setTimeout(() => {

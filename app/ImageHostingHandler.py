@@ -1,6 +1,7 @@
 import os
 from uuid import uuid4
-
+from PIL import Image
+import io
 from loguru import logger
 
 from advanced_http_request_handler import AdvancedHTTPRequestHandler
@@ -22,6 +23,9 @@ class ImageHostingHttpRequestHandler(AdvancedHTTPRequestHandler):
         self.delete_routes = {
             '/api/delete/': self.delete_image
         }
+        self.terms_routes = {
+            '/terms': self.get_terms
+        }
         super().__init__(request, client_address, server)
 
     def get_images(self):
@@ -33,7 +37,7 @@ class ImageHostingHttpRequestHandler(AdvancedHTTPRequestHandler):
         length = int(self.headers.get('Content-Length'))
         if length > MAX_FILE_SIZE:
             logger.warning('File too large')
-            self.send_html(ERROR_FILE, 413)
+            self.send_error(413, "File too large")
             return
 
         data = self.rfile.read(length)
@@ -41,12 +45,15 @@ class ImageHostingHttpRequestHandler(AdvancedHTTPRequestHandler):
         image_id = uuid4()
         if ext not in ALLOWED_EXTENSIONS:
             logger.warning('File type not allowed')
-            self.send_html(ERROR_FILE, 400)
+            self.send_error(400, "File type not allowed")
+            return
+        if not is_valid_image(data):
+            self.send_error(400, "This is not an image file" )  # Не изображение
             return
 
         with open(IMAGES_PATH + f'{image_id}{ext}', 'wb') as file:
             file.write(data)
-        self.send_html('upload_success.html', headers={
+        self.send_json({'file_length': {length}}, headers={
             'Location': f'http://localhost/{IMAGES_PATH}{image_id}{ext}'})
 
     def delete_image(self):
@@ -64,3 +71,16 @@ class ImageHostingHttpRequestHandler(AdvancedHTTPRequestHandler):
 
         os.remove(image_path)
         self.send_json({'Success': 'Image deleted'})
+
+
+    def get_terms(self):
+        self.send_html('terms.html', 200)
+
+def is_valid_image(file_data: bytes) -> bool:
+    """Является ли загруженный файл изображением."""
+    try:
+        image = Image.open(io.BytesIO(file_data))
+        image.verify()  # Проверяет целостность файла
+        return True
+    except (IOError, SyntaxError):
+        return False

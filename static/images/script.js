@@ -29,7 +29,7 @@ function setImages(images) {
         deleteButton.classList.add('delete-btn');
         tdDelete.appendChild(deleteButton);
         tdPreview.innerHTML = `<img src="/images/${image}" width="42" height="100%">`;
-        tdUrl.innerHTML = `<a href="/images/${image}/" target="_blank">${image}</a>`;
+        tdUrl.innerHTML = `<a href="/images/${image}" target="_blank">${image}</a>`;
 
         tr.appendChild(tdPreview);
         tr.appendChild(tdUrl);

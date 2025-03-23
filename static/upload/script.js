@@ -43,8 +43,8 @@ function handleFiles(files) {
     dropArea.innerHTML = `<div class="upload-area__icon">
                 <img src="failed.png" alt="Upload Icon" width="70" height="50"/>
             </div>
-            <p>Unsupported file type or size!</p>
-            <p class="upload-area__subtext">Your file has wrong extension<br>or too big to upload</p>`;
+            <p>Unacceptable file!</p>
+            <p class="upload-area__subtext">Use suitable extension<br>and size</p>`;
     dropArea.classList.remove('success');
       dropArea.classList.add('error');
     setTimeout(() => {
@@ -66,9 +66,8 @@ function handleFiles(files) {
     dropArea.innerHTML = `<div class="upload-area__icon">
                 <img src="failed.png" alt="Upload Icon" width="70" height="50"/>
             </div>
-            <p>Unsupported file type or size!</p>
-            <p class="upload-area__subtext">Only 5MB of .jpg, .png and
-                .gif.<br>Please try appropriate file</p>`;
+            <p>Unacceptable file!</p>
+            <p class="upload-area__subtext">Files must fit size<br>and extension criteria</p>`;
     dropArea.classList.remove('success');
       dropArea.classList.add('error');
     setTimeout(() => {
@@ -137,6 +136,31 @@ function uploadFile() {
     body: file
   })
   .then(response => {
+    const responseOk = response.status;
+    if (responseOk > 304) {
+
+    dropArea.innerHTML = '';
+    dropArea.innerHTML = `<div class="upload-area__icon">
+                <img src="failed.png" alt="Upload Icon" width="70" height="50"/>
+            </div>
+            <p>Unacceptable file!</p>
+            <p class="upload-area__subtext">Files must fit size<br>and extension criteria</p>`;
+    dropArea.classList.remove('success');
+      dropArea.classList.add('error');
+    setTimeout(() => {
+      dropArea.innerHTML = '';
+      dropArea.innerHTML = `<div class="upload-area__icon">
+                <img src="upload.png" alt="Upload Icon" width="70" height="50"/>
+            </div>
+            <p>Select a file or drag and drop here</p>
+            <p class="upload-area__subtext">Only support .jpg, .png and
+                .gif.<br>Maximum file size is 5MB</p>`;
+      dropArea.classList.remove('error');
+      copyButton.disabled = true;
+    }, 4000)
+
+    return;
+    }
     document.getElementById('uploadUrl').value = response.headers.get('Location');
 
     copyButton.disabled = false;

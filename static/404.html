@@ -2,19 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Не найдено</title>
-    <style type="text/css">
-        h1 {
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page is not found</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
             display: flex;
-            align-items: center;
             justify-content: center;
-            padding: 2rem;
-            background-color: red;
-            border-radius: 20px;
-            }
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+        }
+        h1 {
+            font-size: 5rem;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        a {
+            display: inline-block;
+            padding: 12px 24px;
+            background: white;
+            color: #2a5298;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        a:hover {
+            background: #ddd;
+        }
     </style>
 </head>
 <body>
-<h1>Не найдено</h1>
+    <div class="container">
+        <h1>404</h1>
+        <p>Ooops... The page you are looking for is not found. :(</p>
+        <p>It happens when a page was removed from server or there is a typo in url.</p>
+        <a href="/">Go back to Homepage</a>
+    </div>
 </body>
 </html>
